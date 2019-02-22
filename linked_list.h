@@ -10,8 +10,19 @@ struct triplet{
 
 typedef struct triplet *Triplet_list;
 
-void insert(Triplet_list *l, struct triplet *t);
+//Insert triplet
+int insert(Triplet_list l, struct triplet *t);
+//Show every element inside the linked list
 void show(Triplet_list l);
+//Erase the entire linked list
 void erase(Triplet_list *l);
+//Count linked list elements
+int elements(Triplet_list l);
+//Look for a specific triplet
+struct triplet* search(Triplet_list l, char *key);
+//Modify a existing value
+int modify(Triplet_list l, char *key, char *value1, float value2);
+//Delete single tuple
+int delete(Triplet_list l, char *key);
 
 #endif
