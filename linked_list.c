@@ -41,8 +41,9 @@ void show(Triplet_list l) {
 	}
 }
 
-void erase(Triplet_list *l) {
+int erase(Triplet_list *l) {
 	Triplet_list aux, p;
+	int code = 0;
 	p = *l;
 	if (p != NULL) {
 		while (p != NULL) {
@@ -52,6 +53,7 @@ void erase(Triplet_list *l) {
 		}
 		*l = NULL;
 	}
+	return code;
 }
 
 int elements(Triplet_list l) {
@@ -88,7 +90,7 @@ int modify(Triplet_list l, char *key, char *value1, float value2) {
 				return 0;
 			}
 			cursor = cursor->link;
-		}	
+		}
 	}
 	return code;
 }
@@ -108,4 +110,16 @@ int delete(Triplet_list l, char *key) {
 		}
 	}
 	return code;
+}
+
+int verify(Triplet_list l, char *key){
+	int code = -1;
+	Triplet_list cursor = l;
+	while (cursor != NULL) {
+		if (strcmp(cursor->key, key) == 0) {
+			code = 0;
+		}
+		cursor = cursor->link;
+	}
+		return code;
 }
