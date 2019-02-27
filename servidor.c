@@ -41,20 +41,20 @@ void tratar_mensaje(struct request *mes){
     }
 
   }else if (server != NULL) {
-    if (mensaje.op = 1) {
+    if (mensaje.op == 1) {
       result.answer_code = insert(server, &mensaje.t);
-    }else if (mensaje.op = 2) {
+    }else if (mensaje.op == 2) {
       result.answer_code = verify(server, mensaje.t.key);
       if (result.answer_code == 0){
          result.t = *search(server, mensaje.t.key);
       }
-    }else if (mensaje.op = 3) {
+    }else if (mensaje.op == 3) {
      result.answer_code = modify(server, mensaje.t.key, mensaje.t.first_value, mensaje.t.second_value);
-    }else if (mensaje.op = 4) {
+    }else if (mensaje.op == 4) {
       result.answer_code = delete(server, mensaje.t.key);
-    }else if (mensaje.op = 5) {
+    }else if (mensaje.op == 5) {
       result.answer_code = verify(server, mensaje.t.key);
-    }else if (mensaje.op = 6) {
+    }else if (mensaje.op == 6) {
       result.answer_code = elements(server);
     }
   }

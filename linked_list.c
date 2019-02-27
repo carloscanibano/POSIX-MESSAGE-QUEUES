@@ -85,7 +85,7 @@ int modify(Triplet_list l, char *key, char *value1, float value2) {
 	} else {
 		while (cursor != NULL) {
 			if (strcmp(cursor->key, key) == 0) {
-				strcmp(cursor->first_value, value1);
+				strcpy(cursor->first_value, value1);
 				cursor->second_value = value2;
 				return 0;
 			}

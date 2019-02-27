@@ -15,11 +15,11 @@ int init() {
 	struct mq_attr attrib;
 	struct request req;
 	struct answer ans;
-	char *id;
-	char *id_server = "Q_SERVER";
+	char id[256];
+	char *id_server = "/SERVIDOR";
 
 	sprintf(id, "client_%d", getpid());
-	if ((q_client = mq_open(id, O_CREAT | O_RDWR, 0777, &attrib)) == -1) {
+	if ((q_client = mq_open(id, O_CREAT|O_RDWR, 0777, &attrib)) == -1) {
 		printf("Error al abrir la cola de cliente.\n");
 		exit(-1);
 	}
@@ -62,8 +62,8 @@ int set_value(char *key, char *value1, float value2) {
 	struct mq_attr attrib;
 	struct request req;
 	struct answer ans;
-	char *id;
-	char *id_server = "Q_SERVER";
+	char id[256];
+	char *id_server = "/SERVIDOR";
 	struct triplet t;
 
 	sprintf(id, "client_%d", getpid());
@@ -116,8 +116,8 @@ int get_value(char *key, char *value1, float *value2) {
 	struct mq_attr attrib;
 	struct request req;
 	struct answer ans;
-	char *id;
-	char *id_server = "Q_SERVER";
+	char id[256];
+	char *id_server = "/SERVIDOR";
 	struct triplet t;
 
 	sprintf(id, "client_%d", getpid());
@@ -171,8 +171,8 @@ int modify_value(char *key, char *value1, float value2) {
 	struct mq_attr attrib;
 	struct request req;
 	struct answer ans;
-	char *id;
-	char *id_server = "Q_SERVER";
+	char id[256];
+	char *id_server = "/SERVIDOR";
 	struct triplet t;
 
 	sprintf(id, "client_%d", getpid());
@@ -225,8 +225,8 @@ int delete_key(char *key) {
 	struct mq_attr attrib;
 	struct request req;
 	struct answer ans;
-	char *id;
-	char *id_server = "Q_SERVER";
+	char id[256];
+	char *id_server = "/SERVIDOR";
 	struct triplet t;
 
 	sprintf(id, "client_%d", getpid());
@@ -277,8 +277,8 @@ int exist(char *key) {
 	struct mq_attr attrib;
 	struct request req;
 	struct answer ans;
-	char *id;
-	char *id_server = "Q_SERVER";
+	char id[256];
+	char *id_server = "/SERVIDOR";
 	struct triplet t;
 
 	sprintf(id, "client_%d", getpid());
@@ -329,9 +329,8 @@ int num_items() {
 	struct mq_attr attrib;
 	struct request req;
 	struct answer ans;
-	char *id;
-	char *id_server = "Q_SERVER";
-	struct triplet t;
+	char id[256];
+	char *id_server = "/SERVIDOR";
 
 	sprintf(id, "client_%d", getpid());
 	if ((q_client = mq_open(id, O_CREAT | O_RDWR, 0777, &attrib)) == -1) {
