@@ -9,6 +9,8 @@
 #include "linked_list.h"
 #include "claves.h"
 
+#define NUM_MENSAJES 10
+
 int init() {
 	mqd_t q_server;
 	mqd_t q_client;
@@ -18,7 +20,11 @@ int init() {
 	char id[256];
 	char *id_server = "/SERVIDOR";
 
-	sprintf(id, "client_%d", getpid());
+	attrib.mq_maxmsg = NUM_MENSAJES;
+	attrib.mq_msgsize = sizeof(struct request);
+
+	sprintf(id, "/client_%d", getpid());
+	printf(id);
 	if ((q_client = mq_open(id, O_CREAT|O_RDWR, 0777, &attrib)) == -1) {
 		printf("Error al abrir la cola de cliente.\n");
 		exit(-1);

@@ -37,7 +37,8 @@ void tratar_mensaje(struct request *mes){
       result.answer_code = erase(&server);
       insert(server, &first);
     }else{
-      insert(server, &first);
+      printf("Iniciado correctamente\n");
+      result.answer_code = insert(server, &first);
     }
 
   }else if (server != NULL) {
@@ -62,6 +63,7 @@ void tratar_mensaje(struct request *mes){
 
   /* Se devuelve el resultado al cliente */
   /* Para ello se envía el resultado a su cola */
+  printf(mensaje.q_name);
   q_cliente = mq_open(mensaje.q_name, O_WRONLY);
   if (q_cliente == -1){
     printf("No se puede abrir la cola del cliente\n");
@@ -84,7 +86,7 @@ int main(void){
   q_attr.mq_maxmsg = 10;
   q_attr.mq_msgsize = sizeof(struct request);
 
-  q_servidor = mq_open("/SERVIDOR", O_CREAT|O_RDONLY, 0700, &q_attr);
+  q_servidor = mq_open("/SERVIDOR", O_CREAT|O_RDONLY, 0777, &q_attr);
   if (q_servidor == -1) {
     printf("No se puede crear el  servidor.\n");
   }
