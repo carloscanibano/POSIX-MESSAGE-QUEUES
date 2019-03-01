@@ -19,7 +19,12 @@ int main() {
 	} else {
 		printf("Lista del servidor inicializada correctamente.\n");
 	}
-	/*	
+	if (init() == -1) {
+		printf("Error al inicializar la lista del servidor.\n");
+	} else {
+		printf("Lista del servidor inicializada correctamente.\n");
+	}
+	/*
 	if (set_value("Clave1", "Valor1", 0) == -1) {
 		printf("Error al insertar tripleta en el servidor.\n");
 	} else {
@@ -59,4 +64,3 @@ int main() {
 	*/
 	return 0;
 }
-

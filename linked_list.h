@@ -10,11 +10,11 @@ struct triplet{
 
 typedef struct triplet *Triplet_list;
 
-//Insert triplet
-int insert(Triplet_list l, struct triplet *t);
-//Show every element inside the linked list
+//Insert triplet verified
+int insert(Triplet_list *l, struct triplet *t);
+//Show every element inside the linked list verified
 void show(Triplet_list l);
-//Erase the entire linked list
+//Erase the entire linked list verified
 int erase(Triplet_list *l);
 //Count linked list elements
 int elements(Triplet_list l);

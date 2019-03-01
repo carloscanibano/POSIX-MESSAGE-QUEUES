@@ -21,7 +21,7 @@ int init() {
 	char *id_server = "/SERVIDOR";
 
 	attrib.mq_maxmsg = NUM_MENSAJES;
-	attrib.mq_msgsize = sizeof(struct request);
+	attrib.mq_msgsize = sizeof(struct answer);
 
 	sprintf(id, "/client_%d", getpid());
 	printf(id);

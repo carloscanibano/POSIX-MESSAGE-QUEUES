@@ -13,6 +13,7 @@ int mensaje_no_copiado = 1; /* TRUE con valor a 1 */
 pthread_cond_t cond_mensaje;
 Triplet_list server; /* server list */
 struct triplet first; /* first node of list */
+struct triplet second = {"1","1",1.2};  /*second node*/
 
 void tratar_mensaje(struct request *mes){
   struct request mensaje; /* mensaje local */
@@ -34,16 +35,21 @@ void tratar_mensaje(struct request *mes){
 
   if (mensaje.op == 0) {
     if (server != NULL){
+      show(server);
       result.answer_code = erase(&server);
-      insert(server, &first);
+      if (server == NULL){
+        printf("Servidor vacío\n");
+      }
+      insert(&server, &first);
+      show(server);
     }else{
       printf("Iniciado correctamente\n");
-      result.answer_code = insert(server, &first);
+      result.answer_code = insert(&server, &first);
     }
 
   }else if (server != NULL) {
     if (mensaje.op == 1) {
-      result.answer_code = insert(server, &mensaje.t);
+      result.answer_code = insert(&server, &mensaje.t);
     }else if (mensaje.op == 2) {
       result.answer_code = verify(server, mensaje.t.key);
       if (result.answer_code == 0){
@@ -63,7 +69,7 @@ void tratar_mensaje(struct request *mes){
 
   /* Se devuelve el resultado al cliente */
   /* Para ello se envía el resultado a su cola */
-  printf(mensaje.q_name);
+  //printf(mensaje.q_name);
   q_cliente = mq_open(mensaje.q_name, O_WRONLY);
   if (q_cliente == -1){
     printf("No se puede abrir la cola del cliente\n");

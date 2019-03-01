@@ -4,12 +4,12 @@
 #include <stddef.h>
 #include <string.h>
 
-int insert(Triplet_list l, struct triplet *t){
+int insert(Triplet_list *l, struct triplet *t){
 	Triplet_list p1, p2;
-	p1 = l;
+	p1 = *l;
 	int code = -1;
 
-	if (search(l, t->key) == NULL) {
+	if (search(*l, t->key) != NULL) {
 		return code;
 	}
 
@@ -19,6 +19,7 @@ int insert(Triplet_list l, struct triplet *t){
 		strcpy(p1->first_value,t->first_value);
 		p1->second_value = t->second_value;
 		p1->link = NULL;
+		*l = p1;
 		code = 0;
 	} else {
 		while (p1->link != NULL) {
@@ -36,7 +37,7 @@ int insert(Triplet_list l, struct triplet *t){
 
 void show(Triplet_list l) {
 	while (l != NULL) {
-		printf("key: %s, first_value: %s, second_value: %f", l->key, l->first_value, l->second_value);
+		printf("key: %s, first_value: %s, second_value: %f \n", l->key, l->first_value, l->second_value);
 		l = l->link;
 	}
 }
