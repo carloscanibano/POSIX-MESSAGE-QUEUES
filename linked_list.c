@@ -9,9 +9,11 @@ int insert(Triplet_list *l, struct triplet *t){
 	p1 = *l;
 	int code = -1;
 
-	if (search(*l, t->key) != NULL) {
+	/*
+	if (search(l, t->key) != NULL) {
 		return code;
 	}
+	*/
 
 	if (p1 == NULL) {
 		p1 = (struct triplet *) malloc(sizeof(struct triplet));
@@ -68,14 +70,17 @@ int elements(Triplet_list l) {
 }
 
 struct triplet* search(Triplet_list l, char *key) {
+	struct triplet *not_found = (struct triplet *) malloc(sizeof(struct triplet));
 	Triplet_list cursor = l;
 	while (cursor != NULL) {
 		if (strcmp(cursor->key, key) == 0) {
+			free(not_found);
 			return cursor;
 		}
 		cursor = cursor->link;
 	}
-	return NULL;
+	strcpy(not_found->key, "NOT_FOUND");
+	return not_found;
 }
 
 int modify(Triplet_list l, char *key, char *value1, float value2) {
