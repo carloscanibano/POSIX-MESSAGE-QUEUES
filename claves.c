@@ -8,6 +8,7 @@
 #include <fcntl.h>
 #include "linked_list.h"
 #include "claves.h"
+#include <errno.h>
 
 #define NUM_MENSAJES 10
 
@@ -25,6 +26,9 @@ int init() {
 
 	sprintf(id, "/client_%d", getpid());
 	printf(id);
+
+	mq_unlink(id);
+
 	if ((q_client = mq_open(id, O_CREAT|O_RDWR, 0777, &attrib)) == -1) {
 		printf("Error al abrir la cola de cliente.\n");
 		exit(-1);
@@ -72,7 +76,13 @@ int set_value(char *key, char *value1, float value2) {
 	char *id_server = "/SERVIDOR";
 	struct triplet t;
 
-	sprintf(id, "client_%d", getpid());
+	attrib.mq_maxmsg = NUM_MENSAJES;
+	attrib.mq_msgsize = sizeof(struct answer);
+
+	sprintf(id, "/client_%d", getpid());
+
+	mq_unlink(id);
+
 	if ((q_client = mq_open(id, O_CREAT | O_RDWR, 0777, &attrib)) == -1) {
 		printf("Error al abrir la cola de cliente.\n");
 		exit(-1);
@@ -126,7 +136,13 @@ int get_value(char *key, char *value1, float *value2) {
 	char *id_server = "/SERVIDOR";
 	struct triplet t;
 
-	sprintf(id, "client_%d", getpid());
+	attrib.mq_maxmsg = NUM_MENSAJES;
+	attrib.mq_msgsize = sizeof(struct answer);
+
+	sprintf(id, "/client_%d", getpid());
+
+	mq_unlink(id);
+
 	if ((q_client = mq_open(id, O_CREAT | O_RDWR, 0777, &attrib)) == -1) {
 		printf("Error al abrir la cola de cliente.\n");
 		exit(-1);
@@ -181,7 +197,13 @@ int modify_value(char *key, char *value1, float value2) {
 	char *id_server = "/SERVIDOR";
 	struct triplet t;
 
-	sprintf(id, "client_%d", getpid());
+	attrib.mq_maxmsg = NUM_MENSAJES;
+	attrib.mq_msgsize = sizeof(struct answer);
+
+	sprintf(id, "/client_%d", getpid());
+
+	mq_unlink(id);
+
 	if ((q_client = mq_open(id, O_CREAT | O_RDWR, 0777, &attrib)) == -1) {
 		printf("Error al abrir la cola de cliente.\n");
 		exit(-1);
@@ -235,7 +257,13 @@ int delete_key(char *key) {
 	char *id_server = "/SERVIDOR";
 	struct triplet t;
 
-	sprintf(id, "client_%d", getpid());
+	attrib.mq_maxmsg = NUM_MENSAJES;
+	attrib.mq_msgsize = sizeof(struct answer);
+
+	sprintf(id, "/client_%d", getpid());
+
+	mq_unlink(id);
+
 	if ((q_client = mq_open(id, O_CREAT | O_RDWR, 0777, &attrib)) == -1) {
 		printf("Error al abrir la cola de cliente.\n");
 		exit(-1);
@@ -287,7 +315,13 @@ int exist(char *key) {
 	char *id_server = "/SERVIDOR";
 	struct triplet t;
 
-	sprintf(id, "client_%d", getpid());
+	attrib.mq_maxmsg = NUM_MENSAJES;
+	attrib.mq_msgsize = sizeof(struct answer);
+
+	sprintf(id, "/client_%d", getpid());
+
+	mq_unlink(id);
+
 	if ((q_client = mq_open(id, O_CREAT | O_RDWR, 0777, &attrib)) == -1) {
 		printf("Error al abrir la cola de cliente.\n");
 		exit(-1);
@@ -338,7 +372,13 @@ int num_items() {
 	char id[256];
 	char *id_server = "/SERVIDOR";
 
-	sprintf(id, "client_%d", getpid());
+	attrib.mq_maxmsg = NUM_MENSAJES;
+	attrib.mq_msgsize = sizeof(struct answer);
+
+	sprintf(id, "/client_%d", getpid());
+
+	mq_unlink(id);
+
 	if ((q_client = mq_open(id, O_CREAT | O_RDWR, 0777, &attrib)) == -1) {
 		printf("Error al abrir la cola de cliente.\n");
 		exit(-1);

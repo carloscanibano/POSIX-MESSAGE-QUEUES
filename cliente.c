@@ -20,7 +20,7 @@ void test_funciones() {
 	} else {
 		printf("Lista del servidor inicializada correctamente.\n");
 	}
-	
+
 	if (set_value("Clave1", "Valor1", 0) == -1) {
 		printf("Error al insertar tripleta en el servidor.\n");
 	} else {
@@ -137,7 +137,7 @@ void cliente1() {
 		printf("Error al buscar tripleta en el servidor.\n");
 	} else {
 		printf("Tripleta buscada correctamente en el servidor.\n");
-	}		
+	}
 
 	//ESTADO 9: TRIPLETA EXISTE, 3 ELEMENTOS, 1 MODIFICADO
 
@@ -166,7 +166,7 @@ void cliente1() {
 		printf("Primer valor: %s\n Segundo valor: %f\n", value1, value2);
 	}
 
-	//ESTADO 12: LECTURA INCORRECTA, 4 ELEMENTOS, 1 MODIFICADO	
+	//ESTADO 12: LECTURA INCORRECTA, 4 ELEMENTOS, 1 MODIFICADO
 }
 
 //Necesita lista abierta
@@ -184,7 +184,7 @@ void cliente2() {
 			flag = 0; //FALSE
 		} else {
 			//printf("Tripleta insertada correctamente en el servidor.\n");
-		}	
+		}
 	}
 
 	if (!flag) printf("ERROR EN LA CREACION DE 100 TRIPLETAS\n");
@@ -199,25 +199,25 @@ void cliente2() {
 			flag = 0; //FALSE
 		} else {
 			//printf("Tripleta borrada correctamente en el servidor.\n");
-		}	
+		}
 	}
 
 	if (!flag) printf("ERROR EN EL BORRADO DE 25 TRIPLETAS\n");
 
 	//ESTADO 2: BORRADO CORRECTO DE 25 TRIPLETAS
-	//AÑADIRE MAS COSAS DESPUES, PERO PUEDES PROBAR LA CREACION Y EL BORRADO	
+	//AÑADIRE MAS COSAS DESPUES, PERO PUEDES PROBAR LA CREACION Y EL BORRADO
 
 }
 
 int main() {
 
 	//Deberia funcionar todo sin error y obtener resultados coherentes
-	test_funciones();
+	//test_funciones();
 	//Para probar, invoca las diferentes funciones de cliente como arriba
 	//CONSIDERA REINICIAR LA LISTA ENTRE CLIENTES SI ES NECESARIO (MEMORIA)
 	//Algunos clientes necesitan la lista abierta o ellos solos la crean, mirar signatura
 
-	//cliente1();
+	cliente1();
 	//cliente2();
 	return 0;
 }

@@ -9,12 +9,6 @@ int insert(Triplet_list *l, struct triplet *t){
 	p1 = *l;
 	int code = -1;
 
-	/*
-	if (search(l, t->key) != NULL) {
-		return code;
-	}
-	*/
-
 	if (p1 == NULL) {
 		p1 = (struct triplet *) malloc(sizeof(struct triplet));
 		strcpy(p1->key, t->key);
@@ -24,15 +18,17 @@ int insert(Triplet_list *l, struct triplet *t){
 		*l = p1;
 		code = 0;
 	} else {
-		while (p1->link != NULL) {
-			p1 = p1->link;
+		if (verify(*l, t->key) == -1){
+			while (p1->link != NULL) {
+				p1 = p1->link;
+			}
+			p2 = (struct triplet *) malloc(sizeof(struct triplet));
+			strcpy(p2->key, t->key);
+			strcpy(p2->first_value, t->first_value);
+			p2->second_value = t->second_value;
+			p1->link = p2;
+			code = 0;
 		}
-		p2 = (struct triplet *) malloc(sizeof(struct triplet));
-		strcpy(p2->key, t->key);
-		strcpy(p2->first_value, t->first_value);
-		p2->second_value = t->second_value;
-		p1->link = p2;
-		code = 0;
 	}
 	return code;
 }
@@ -83,10 +79,10 @@ struct triplet* search(Triplet_list l, char *key) {
 	return not_found;
 }
 
-int modify(Triplet_list l, char *key, char *value1, float value2) {
+int modify(Triplet_list *l, char *key, char *value1, float value2) {
 	int code = -1;
-	Triplet_list cursor = l;
-	if (search(l, key) == NULL) {
+	Triplet_list cursor = *l;
+	if (verify(*l, key) == -1) {
 		return code;
 	} else {
 		while (cursor != NULL) {
@@ -101,21 +97,36 @@ int modify(Triplet_list l, char *key, char *value1, float value2) {
 	return code;
 }
 
-int delete(Triplet_list l, char *key) {
+int delete(Triplet_list *l, char *key) {
+	Triplet_list aux;
 	int code = -1;
-	Triplet_list cursor = l;
-	if (search(l, key) == NULL) {
+	Triplet_list cursor = *l;
+	if (verify(*l, key) == -1) {
 		return code;
 	} else {
-		while (cursor != NULL) {
-			if (strcmp(cursor->link->key, key) == 0) {
-				cursor->link = cursor->link->link;
-				free(cursor->link);
-				return 0;
+			if (strcmp(cursor->key, key) == 0) {
+				if (cursor->link == NULL){
+					free (cursor);
+					*l = NULL;
+					return 0;
+				}else{
+					*l = cursor->link;
+					free (cursor);
+					return 0;
+				}
+			} else {
+				while (cursor != NULL) {
+				if (strcmp(cursor->link->key, key) == 0) {
+					aux = cursor->link;
+					cursor->link = cursor->link->link;
+					free(aux);
+					return 0;
+				}
+				cursor = cursor->link;
 			}
 		}
-	}
 	return code;
+	}
 }
 
 int verify(Triplet_list l, char *key){

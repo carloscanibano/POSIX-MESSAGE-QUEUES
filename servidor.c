@@ -35,7 +35,6 @@ void tratar_mensaje(struct request *mes){
 
   if (mensaje.op == 0) {
     if (server != NULL){
-      show(server);
       result.answer_code = erase(&server);
       if (server == NULL){
         printf("Servidor vacío\n");
@@ -50,19 +49,23 @@ void tratar_mensaje(struct request *mes){
   }else if (server != NULL) {
     if (mensaje.op == 1) {
       result.answer_code = insert(&server, &mensaje.t);
+      //show(server);
     }else if (mensaje.op == 2) {
       result.answer_code = verify(server, mensaje.t.key);
       if (result.answer_code == 0){
          result.t = *search(server, mensaje.t.key);
       }
     }else if (mensaje.op == 3) {
-     result.answer_code = modify(server, mensaje.t.key, mensaje.t.first_value, mensaje.t.second_value);
+     result.answer_code = modify(&server, mensaje.t.key, mensaje.t.first_value, mensaje.t.second_value);
+     show(server);
     }else if (mensaje.op == 4) {
-      result.answer_code = delete(server, mensaje.t.key);
+      result.answer_code = delete(&server, mensaje.t.key);
+      show(server);
     }else if (mensaje.op == 5) {
       result.answer_code = verify(server, mensaje.t.key);
     }else if (mensaje.op == 6) {
       result.answer_code = elements(server);
+      show(server);
     }
   }
 
