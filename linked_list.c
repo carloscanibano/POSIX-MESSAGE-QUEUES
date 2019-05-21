@@ -8,7 +8,6 @@ int insert(Triplet_list *l, struct triplet *t){
 	Triplet_list p1, p2;
 	p1 = *l;
 	int code = -1;
-
 	if (p1 == NULL) {
 		p1 = (struct triplet *) malloc(sizeof(struct triplet));
 		strcpy(p1->key, t->key);
@@ -27,6 +26,7 @@ int insert(Triplet_list *l, struct triplet *t){
 			strcpy(p2->first_value, t->first_value);
 			p2->second_value = t->second_value;
 			p1->link = p2;
+			p2->link = NULL;
 			code = 0;
 		}
 	}

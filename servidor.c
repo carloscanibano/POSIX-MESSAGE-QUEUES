@@ -4,16 +4,18 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
 #include "linked_list.h"
-#include "claves.h"
+#include "mensajes.h"
 
 /* mutex y variables condicionales para proteger la copia del mensaje*/
 pthread_mutex_t mutex_mensaje;
+/* mutex encargado de controlar la manipulacion de la lista */
+pthread_mutex_t mutex_operacion;
 int mensaje_no_copiado = 1; /* TRUE con valor a 1 */
 pthread_cond_t cond_mensaje;
 Triplet_list server; /* server list */
-struct triplet first; /* first node of list */
-struct triplet second = {"1","1",1.2};  /*second node*/
 
 void tratar_mensaje(struct request *mes){
   struct request mensaje; /* mensaje local */
@@ -33,46 +35,53 @@ void tratar_mensaje(struct request *mes){
   pthread_cond_signal(&cond_mensaje);
   pthread_mutex_unlock(&mutex_mensaje);
 
+  sleep(1);
+
+  /* bloque de operaciones con la lista protegido con mutex */
+  /* corresponde a la operacion init */
   if (mensaje.op == 0) {
-    if (server != NULL){
-      result.answer_code = erase(&server);
-      if (server == NULL){
-        printf("Servidor vacío\n");
-      }
-      insert(&server, &first);
-      show(server);
-    }else{
-      printf("Iniciado correctamente\n");
-      result.answer_code = insert(&server, &first);
+    pthread_mutex_lock(&mutex_operacion);
+    result.answer_code = erase(&server);
+    pthread_mutex_unlock(&mutex_operacion);
+  /* corresponde a la operacion set_value */
+  } else if (mensaje.op == 1) {
+    pthread_mutex_lock(&mutex_operacion);
+    result.answer_code = insert(&server, &mensaje.t);
+    pthread_mutex_unlock(&mutex_operacion);
+  /* corresponde a la operacion get_value */
+  } else if (mensaje.op == 2) {
+    pthread_mutex_lock(&mutex_operacion);
+    result.answer_code = verify(server, mensaje.t.key);
+    pthread_mutex_unlock(&mutex_operacion);
+    if (result.answer_code == 0) {
+      pthread_mutex_lock(&mutex_operacion);
+      result.t = *search(server, mensaje.t.key);
+      pthread_mutex_unlock(&mutex_operacion);
     }
-
-  }else if (server != NULL) {
-    if (mensaje.op == 1) {
-      result.answer_code = insert(&server, &mensaje.t);
-      //show(server);
-    }else if (mensaje.op == 2) {
-      result.answer_code = verify(server, mensaje.t.key);
-      if (result.answer_code == 0){
-         result.t = *search(server, mensaje.t.key);
-      }
-    }else if (mensaje.op == 3) {
-     result.answer_code = modify(&server, mensaje.t.key, mensaje.t.first_value, mensaje.t.second_value);
-     show(server);
-    }else if (mensaje.op == 4) {
-      result.answer_code = delete(&server, mensaje.t.key);
-      show(server);
-    }else if (mensaje.op == 5) {
-      result.answer_code = verify(server, mensaje.t.key);
-    }else if (mensaje.op == 6) {
-      result.answer_code = elements(server);
-      show(server);
-    }
+  /* corresponde a la operacion modify_value */
+  } else if (mensaje.op == 3) {
+    pthread_mutex_lock(&mutex_operacion);
+    result.answer_code = modify(&server, mensaje.t.key, mensaje.t.first_value, mensaje.t.second_value);
+    pthread_mutex_unlock(&mutex_operacion);
+    /* corresponde a la operacion delete_key */
+  } else if (mensaje.op == 4) {
+    pthread_mutex_lock(&mutex_operacion);
+    result.answer_code = delete(&server, mensaje.t.key);
+    pthread_mutex_unlock(&mutex_operacion);
+    /* corresponde a la operacion exist */
+  } else if (mensaje.op == 5) {
+    pthread_mutex_lock(&mutex_operacion);
+    result.answer_code = verify(server, mensaje.t.key);
+    pthread_mutex_unlock(&mutex_operacion);
+    /* corresponde a la operacion num_items */
+  } else if (mensaje.op == 6) {
+    pthread_mutex_lock(&mutex_operacion);
+    result.answer_code = elements(server);
+    pthread_mutex_unlock(&mutex_operacion);
   }
-
 
   /* Se devuelve el resultado al cliente */
   /* Para ello se envía el resultado a su cola */
-  //printf(mensaje.q_name);
   q_cliente = mq_open(mensaje.q_name, O_WRONLY);
   if (q_cliente == -1){
     printf("No se puede abrir la cola del cliente\n");
@@ -80,9 +89,7 @@ void tratar_mensaje(struct request *mes){
     mq_send(q_cliente, (const char *) &result, sizeof(result), 0);
     mq_close(q_cliente);
   }
-
   pthread_exit(0);
-
 }
 
 
@@ -98,6 +105,8 @@ int main(void){
   q_servidor = mq_open("/SERVIDOR", O_CREAT|O_RDONLY, 0777, &q_attr);
   if (q_servidor == -1) {
     printf("No se puede crear el  servidor.\n");
+  }else{
+    printf("Creado el servidor correctamente.\n");
   }
 
   pthread_mutex_init(&mutex_mensaje, NULL);
@@ -108,7 +117,9 @@ int main(void){
 
   while (1) {
     mq_receive(q_servidor, (char *) &mess, sizeof(mess), 0);
+    //printf("Creando thread.\n");
     pthread_create(&thid, &t_attr, (void *)tratar_mensaje, &mess);
+    //printf("Thread creado.\n");
     /* se espera a que el thread copie el mensaje */
     pthread_mutex_lock(&mutex_mensaje);
     while (mensaje_no_copiado){

@@ -8,10 +8,12 @@
 #include <fcntl.h>
 #include "linked_list.h"
 #include "claves.h"
+#include "mensajes.h"
 #include <errno.h>
 
 #define NUM_MENSAJES 10
 
+//Erase existent linked list
 int init() {
 	mqd_t q_server;
 	mqd_t q_client;
@@ -21,11 +23,10 @@ int init() {
 	char id[256];
 	char *id_server = "/SERVIDOR";
 
-	attrib.mq_maxmsg = NUM_MENSAJES;
+	attrib.mq_maxmsg = 1;
 	attrib.mq_msgsize = sizeof(struct answer);
 
 	sprintf(id, "/client_%d", getpid());
-	printf(id);
 
 	mq_unlink(id);
 
@@ -76,7 +77,7 @@ int set_value(char *key, char *value1, float value2) {
 	char *id_server = "/SERVIDOR";
 	struct triplet t;
 
-	attrib.mq_maxmsg = NUM_MENSAJES;
+	attrib.mq_maxmsg = 1;
 	attrib.mq_msgsize = sizeof(struct answer);
 
 	sprintf(id, "/client_%d", getpid());
@@ -126,6 +127,7 @@ int set_value(char *key, char *value1, float value2) {
 	return ans.answer_code;
 }
 
+//Get values related to user specified key
 int get_value(char *key, char *value1, float *value2) {
 	mqd_t q_server;
 	mqd_t q_client;
@@ -136,7 +138,7 @@ int get_value(char *key, char *value1, float *value2) {
 	char *id_server = "/SERVIDOR";
 	struct triplet t;
 
-	attrib.mq_maxmsg = NUM_MENSAJES;
+	attrib.mq_maxmsg = 1;
 	attrib.mq_msgsize = sizeof(struct answer);
 
 	sprintf(id, "/client_%d", getpid());
@@ -169,6 +171,7 @@ int get_value(char *key, char *value1, float *value2) {
 		printf("No se ha podido recibir la respuesta del servidor.\n");
 	}
 
+	//Copy result values into variables
 	strcpy(value1, ans.t.first_value);
 	*value2 = ans.t.second_value;
 
@@ -187,6 +190,7 @@ int get_value(char *key, char *value1, float *value2) {
 	return ans.answer_code;
 }
 
+//Modify triplets related to user specified key
 int modify_value(char *key, char *value1, float value2) {
 	mqd_t q_server;
 	mqd_t q_client;
@@ -197,7 +201,7 @@ int modify_value(char *key, char *value1, float value2) {
 	char *id_server = "/SERVIDOR";
 	struct triplet t;
 
-	attrib.mq_maxmsg = NUM_MENSAJES;
+	attrib.mq_maxmsg = 1;
 	attrib.mq_msgsize = sizeof(struct answer);
 
 	sprintf(id, "/client_%d", getpid());
@@ -247,6 +251,7 @@ int modify_value(char *key, char *value1, float value2) {
 	return ans.answer_code;
 }
 
+//Delete triplet related to user specified key
 int delete_key(char *key) {
 	mqd_t q_server;
 	mqd_t q_client;
@@ -257,7 +262,7 @@ int delete_key(char *key) {
 	char *id_server = "/SERVIDOR";
 	struct triplet t;
 
-	attrib.mq_maxmsg = NUM_MENSAJES;
+	attrib.mq_maxmsg = 1;
 	attrib.mq_msgsize = sizeof(struct answer);
 
 	sprintf(id, "/client_%d", getpid());
@@ -305,6 +310,7 @@ int delete_key(char *key) {
 	return ans.answer_code;
 }
 
+//Checks if any triplet has user specified key
 int exist(char *key) {
 	mqd_t q_server;
 	mqd_t q_client;
@@ -315,7 +321,7 @@ int exist(char *key) {
 	char *id_server = "/SERVIDOR";
 	struct triplet t;
 
-	attrib.mq_maxmsg = NUM_MENSAJES;
+	attrib.mq_maxmsg = 1;
 	attrib.mq_msgsize = sizeof(struct answer);
 
 	sprintf(id, "/client_%d", getpid());
@@ -363,6 +369,7 @@ int exist(char *key) {
 	return ans.answer_code;
 }
 
+//Retrieves server-side linked list number of elements
 int num_items() {
 	mqd_t q_server;
 	mqd_t q_client;
@@ -372,7 +379,7 @@ int num_items() {
 	char id[256];
 	char *id_server = "/SERVIDOR";
 
-	attrib.mq_maxmsg = NUM_MENSAJES;
+	attrib.mq_maxmsg = 1;
 	attrib.mq_msgsize = sizeof(struct answer);
 
 	sprintf(id, "/client_%d", getpid());

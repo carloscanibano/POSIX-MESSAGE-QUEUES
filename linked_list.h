@@ -1,17 +1,27 @@
 #ifndef _linked_list_h
 #define _linked_list_h
 
-struct triplet{
-	char key[255];
-	char first_value[255];
-	float second_value;
-	struct triplet *link;
+struct topic{
+	char name[255];
+	struct user *userList;
+	struct topic *nextTopic;
 };
 
-typedef struct triplet *Triplet_list;
+struct user{
+	short ip;
+	long port;
+	struct user *nextUser;
+};
 
-//Insert triplet verified
-int insert(Triplet_list *l, struct triplet *t);
+typedef struct topic *Topic_list;
+typedef struct user *User_list;
+
+//Insert topic
+int insert_topic(Triplet_list *l, struct triplet *t);
+//Subscribe user to existing topic
+int insert_user_topic(Triplet_list *l, struct triplet *t);
+//Subscribe user to non existing topic
+int insert_user_notopic(Triplet_list *l, struct triplet *t);
 //Show every element inside the linked list verified
 void show(Triplet_list l);
 //Erase the entire linked list verified
